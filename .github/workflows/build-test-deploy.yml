@@ -1,7 +1,7 @@
 name: build-deploy
 on: push
 jobs:
-  hello-world-job:
+  build-job:
     runs-on: ubuntu-latest
     steps:
       - name: checkout your repository code
