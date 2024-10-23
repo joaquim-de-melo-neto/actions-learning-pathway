@@ -9,7 +9,7 @@ jobs:
       - name: use node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '20'
       - run: npm install
       - run: npm run build 
       - run: echo '### Build made! 🚀' >> $GITHUB_STEP_SUMMARY
@@ -22,7 +22,7 @@ jobs:
       - name: use node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: '20'
       - run: npm install
       - run: npm test
       - run: echo '### Test Made! 🚀' >> $GITHUB_STEP_SUMMARY
