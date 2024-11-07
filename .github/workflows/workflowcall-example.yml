@@ -1,0 +1,59 @@
+# How to make a workflow reusable
+# Here’s an example from the build-test-deploy.yml workflow we created in the Automation Essentials module. 
+# Below we updated the file to accommodate reusability. In addition to adding workflow_call, we also defined parameters allowing us to set the node-version. 
+# Pay attention to the comments outlined in the code:
+
+name: build-test-deploy
+# Changed 'on' to enable this workflow to be called from other workflows
+on:
+  workflow_call:
+    # Introduced 'inputs' to define parameters that can be passed when calling this workflow
+    inputs:
+      node-version:
+        description: "Node version"
+        required: true
+        type: string
+
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+
+    steps: 
+      - name: checkout repo
+        uses: actions/checkout@v3
+      # Modified to use the node-version from the workflow inputs
+      - name: use node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+
+      - run: npm install
+      - run: npm run build
+
+  test: 
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    steps: 
+      - name: checkout repo
+        uses: actions/checkout@v3
+      # Modified to use the node-version from the workflow inputs
+      - name: use node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+          
+      - run: npm install
+      - run: npm run test
+
+# Now that we have updated our build-test-deploy workflow to accommodate reusability and we understand how to call a reusable workflow, let's put it all together. 
+# In the example code below, we call the build-test-deploy workflow from a workflow located in a separate repository:
+
+jobs:
+  my-job:
+    # Importing a reusable workflow from another repository and branch
+    uses: organization/repo/.github/workflows/build-test-deploy.yml@main
+    # Passing 'node-version' as an input parameter to the reusable workflow
+    with:
+      node-version: '18.x'
